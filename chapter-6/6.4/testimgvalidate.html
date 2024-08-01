@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>File Extension and Image Dimension Validation</title>
+</head>
+<body>
+
+<form>
+  <div>
+    <img id="imagePreview" src="">
+  </div>
+  <input type="file" id="fileInput" name="file" accept="image/*" onchange="validateImage(this)" />
+</form>
+
+<script>
+  const imagePreview = document.getElementById('imagePreview');
+
+  const validateImage = async (input) => {
+    const file = input.files[0];
+    const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+
+    if (!file) {
+      alert('File not found.');
+      return false;
+    }
+
+    // Check file extension
+    if (!allowedExtensions.exec(file.name)) {
+      alert('Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed.');
+      input.value = ''; // Clear the file input
+      imagePreview.src = '';
+      return false;
+    }
+
+    try {
+      const imgSrc = await readFileAsDataURL(file);
+      const { width, height } = await loadImageDimensions(imgSrc);
+      
+      const maxWidth = 1920;
+      const maxHeight = 1080;
+      
+      console.log('width', width);
+      console.log('height', height);
+      
+      if (width > maxWidth || height > maxHeight) {
+          alert(`Image dimensions must be within ${maxWidth}x${maxHeight} pixels.`);
+          input.value = '';
+          imagePreview.src = '';
+          return false;
+        }
+        
+      imagePreview.src = imgSrc;
+      console.log("Image load success");
+    } catch (error) {
+      alert(error.message);
+      input.value = '';
+      imagePreview.src = '';
+    }
+  };
+  
+  const readFileAsDataURL = (file) => {
+      return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(new Error('There was an error reading the file.'));
+          reader.readAsDataURL(file);
+        });
+    };
+
+const loadImageDimensions = (src) => {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+        img.onerror = () => reject(new Error('There was an error loading the image.'));
+        img.src = src;
+    });
+  };
+</script>
+
+</body>
+</html>

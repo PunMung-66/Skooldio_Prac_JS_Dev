@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Digital Clock</title>
+    <style>
+      .clock {
+        font-size: 48px;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="clock">
+      <span id="hours">00</span>
+      <span>:</span>
+      <span id="minutes">00</span>
+      <span>:</span>
+      <span id="seconds">00</span>
+    </div>
+
+    <script>
+      let hr = document.querySelector('#hours');
+      let min = document.querySelector('#minutes');
+      let sec = document.querySelector('#seconds');
+
+      window.onlod = () =>{
+        hr.textContent = '00';
+        min.textContent = '00';
+        sec.textContent = '00';
+        console.log('loading finish')
+      }
+
+      let set_digits = (num) =>{
+        if (num < 10){ return `0${num}`}
+        return num;
+      }
+
+      setInterval(()=>{
+        let now = new Date()
+        hr.textContent = set_digits(now.getHours());
+        min.textContent = set_digits(now.getMinutes());
+        sec.textContent = set_digits(now.getSeconds());
+      }, 1000)
+
+    </script>
+  </body>
+</html>

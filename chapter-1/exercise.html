@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 id="main-heading">Welcome to my website!</h1>
+
+    <ul id="fruit-list">
+      <li class="fruit">Apple</li>
+      <li class="fruit">Banana</li>
+      <li class="fruit">Orange</li>
+    </ul>
+
+    <div class="container">
+      <p>This is a paragraph inside a container.</p>
+      <p>Another paragraph inside the container.</p>
+    </div>
+
+    <script>
+        console.log(document.querySelectorAll('.fruit')[0].textContent);
+        console.log(document.querySelector('.container p:nth-child(2)').innerHTML);
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 1. ใช้ `getElementsByClassName` ในการดึงข้อมูลออกมา และเลือกเป็นตัวแรกสุดของ Array ของ element
+
+```
+
+const appleElement = document.getElementsByClassName('fruit')[0];
+console.log(appleElement.textContent); // Output: Apple
+
+
+```
+
+2. ใช้ `querySelectorAll` ในการดึงตาม class ของ fruit ผ่าน `.fruit`
+
+```
+
+const appleElement = document.querySelectorAll('.fruit')[0];
+console.log(appleElement.textContent); // Output: Apple
+```
+
+3. ใช้ `querySelector` โดยการ select ไปยังตัวลูกของ id fruit-list แทน
+
+```
+
+const appleElement = document.querySelector('#fruit-list > .fruit');
+console.log(appleElement.textContent); // Output: Apple
+```
+
+ข้อที่ 2 สามารถทำได้หลายวิธีเช่นกัน
+
+1. (ตรงไปตรงมาที่สุด) ใช้ `querySelector` โดยเลือกเป็นยัง child ของ `.container` ไปยัง child ที่เป็น tag `p` ตัวที่ 2 ออกมา
+
+```
+
+const paragraph = document.querySelector('.container p:nth-child(2)');
+console.log(paragraph.textContent); // Output: Another paragraph inside the container.
+```
+
+2. ใช้ `querySelectorAll` แล้วทำการเลือกจาก array ออกมา
+
+```
+
+const paragraphs = document.querySelectorAll('.container p');
+const paragraph = paragraphs[1];
+console.log(paragraph.textContent); // Output: Another paragraph inside the container.
+```
+
+3. ใช้ `querySelector` กับ `lastElementChild` ในการดึง child ตัวสุดท้ายออกมา
+
+```
+
+const container = document.querySelector('.container');
+const paragraph = container.lastElementChild;
+console.log(paragraph.textContent); // Output: Another paragraph inside the container.querySelector
+``` -->

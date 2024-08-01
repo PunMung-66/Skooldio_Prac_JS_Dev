@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Form Validation Example</title>
+    <style>
+      .container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input[type="text"],
+      input[type="date"],
+      input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      #message {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #f2f2f2;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Form Validation</h2>
+      <form id="myForm">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" />
+        </div>
+        <div class="form-group">
+          <label for="birthdate">Birth Date:</label>
+          <input type="date" id="birthdate" name="birthdate" />
+        </div>
+        <div class="form-group">
+          <label for="file">Upload File:</label>
+          <input type="file" id="file" name="file" />
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+      <div id="message">Please fill this form</div>
+    </div>
+    <script>
+      let myform = document.querySelector("#myForm");
+
+      myform.addEventListener("submit", (event) => {
+        event.preventDefault();
+        let us_name = document.querySelector("#name");
+        let birthdate = document.querySelector("#birthdate");
+        let file = document.querySelector("#file").files[0];
+        let feedback = document.querySelector("#message");
+
+        let morethan_et = (b_date) => {
+          let now = new Date();
+          let b_d = new Date(`${b_date}T12:00:00Z`);
+          let benchmark = new Date(
+            `${now.getFullYear() - 19}-${
+              now.getMonth() + 1 < 10
+                ? "0" + (now.getMonth() + 1)
+                : now.getMonth() + 1
+            }-${
+              now.getDate() < 10 ? "0" + now.getDate() : now.getDate()
+            }T12:00:00Z`
+          );
+          console.log(b_d);
+          console.log(benchmark);
+          if (b_d.getTime() <= benchmark.getTime()) {
+            console.log("PASS");
+            return true;
+          } else {
+            console.log("not yet bro");
+            return false;
+          }
+        };
+
+        let file_less_1MB = (size) => {
+          if (size > 1024 * 1024) {
+            return false;
+          }
+          return true;
+        };
+
+        if (!us_name.value) {
+          feedback.textContent = "Please fill out your name!";
+        } else if (!morethan_et(birthdate.value)) {
+          feedback.textContent = "You must at least 18 years old!";
+        } else if (!file) {
+          feedback.textContent = "Please upload your file!";
+        } else if (!file_less_1MB(file.size)) {
+          feedback.textContent = "File size should not exceed 1 MB!";
+        } else {
+          feedback.textContent = "Form submit Sucessfully";
+        }
+      });
+    </script>
+  </body>
+</html>

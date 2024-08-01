@@ -8,7 +8,7 @@
 <body>
   <script>
     const loadData = async () => {
-      const apiUrl = 'https://pokeapi.co/api/v2/pokemon/ditto'
+      const apiUrl = 'https://pokeapi.co/api/v2/pokemon/ditto' // this line is call api end point
       try {
         const response = await fetch(apiUrl)
         if (!response.ok) {
@@ -16,7 +16,7 @@
         }
         const data = await response.json()
         console.log('data', data)
-      } catch (error) {
+      } catch (error) { 
         console.error('Fetch error:', error.message)
       }
     }

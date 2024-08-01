@@ -30,18 +30,21 @@
     history.pushState({ page: page }, '', url)
   }
 
-  // Event listener สำหรับ popstate
+  // Event listener สำหรับ popstate (ต้องกด BACKWARD BUTTON)
   window.addEventListener('popstate', function(event) {
     if (event.state && event.state.page) {
       // ได้รับหน้าใหม่มา (จากการกด pushState) = เปลี่ยนหน้า
+      // console.log(event.state.page)
       navigateTo(event.state.page)
     }
   })
 
-  // ประกาศ history เริ่มต้น
+  // ประกาศ history เริ่มต้น (แค่ตอน Loadเท่านั้น)
   document.addEventListener('DOMContentLoaded', function() {
     history.replaceState({ page: 'push.html' }, '', 'push.html')
     navigateTo('push.html')
+    console.log('Replace')
+
   })
   </script>
 </body>

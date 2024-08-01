@@ -15,13 +15,14 @@
       date.setTime(date.getTime() + (seconds * 1000))
       // ถ้าอยากเป็นหลักวัน = (days * 24 * 60 * 60 * 1000)
       const expires = `expires=${date.toUTCString()}`
-      document.cookie = `${name}=${value};${expires};path=/`
+      document.cookie = `${name}=${value};${expires};path=/` // set visit count 
     }
 
     const getCookie = (name) => {
       const nameEQ = `${name}=`
       const ca = document.cookie.split(';')
-      for (let i = 0; i < ca.length; i++) {
+      console.log(ca[0]);
+      for (let i = 0; i < ca.length; i++) { // it not only have one token that why we need to loop it
         let c = ca[i].trim()
         if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length)
       }
@@ -30,7 +31,7 @@
 
     window.onload = () => {
       let count = getCookie('visitCount')
-      count = count ? parseInt(count) : 0
+      count = count ? parseInt(count) : 0 // check that count have value if not assign 0 
       count++
       setCookie('visitCount', count, 5)
       document.getElementById('visitCount').textContent = count

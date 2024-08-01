@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pokemon List</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <h1>Pokemon List</h1>
+    <div id="loading">Loading...</div>
+    <ul id="pokemonList"></ul>
+    <script>
+      async function fetchPokemonList() {
+        try{
+        let poke_list = document.querySelector('#pokemonList');
+        let loading = document.querySelector('#loading');
+        let apiUrl = 'https://pokeapi.co/api/v2/pokemon?limit=10&offset=0';
+        let response = await axios.get(apiUrl);
+        console.log(response.data)
+        loading.innerHTML = '';
+        for (let i = 0; i < response.data.results.length; i++){
+          let newpoke = document.createElement('li');
+          newpoke.innerText = response.data.results[i].name;
+          poke_list.appendChild(newpoke);
+        }
+      } catch (e){
+        console.error('error', e.message )
+      }
+    }
+      fetchPokemonList()
+    </script>
+  </body>
+</html>
+
+<!-- <h1>Pokemon List</h1>
+<div id="loading">Loading...</div>
+<ul id="pokemonList"></ul>
+
+<script>
+  async function fetchPokemonList() {
+    try {
+      // 1. ทำการเพิ่มคำสั่งการดึง API
+      const response = await axios.get(
+        'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0'
+      )
+
+      // 2. ผลลัพธ์ที่ได้ผ่าน axios เราจะทำการเก็บไว้ในตัวแปรหนึ่ง (สมมุติชื่อ response) และ key ที่เก็บผลลัพธ์ของ API นี้ไว้คือ 
+      const pokemonList = response.data.results
+
+
+      // 3. นำ ผลลัพธ์จาก API (ที่ได้มาเป็น Array) สำหรับแต่ละ Pokemon แล้วนำผลลัพธ์รายชื่อเขียนใส่เข้าไปในแต่ละ element ที่สร้างขึ้นมา
+      const pokemonListElement = document.getElementById('pokemonList')
+      pokemonList.forEach((pokemon) => {
+        const listItem = document.createElement('li')
+        listItem.textContent = pokemon.name
+        pokemonListElement.appendChild(listItem)
+      })
+    } catch (error) {
+      console.error('Error fetching Pokemon list:', error)
+    } finally {
+      // 4. ให้ทำการซ่อน Loading… ทิ้งไป เมื่อทำการดึงข้อมูลแล้วเรียบร้อย โดยใช้ finally ของ try catch ได้
+      const loadingElement = document.getElementById('loading')
+      loadingElement.style.display = 'none'
+    }
+  }
+
+  fetchPokemonList()
+</script> -->

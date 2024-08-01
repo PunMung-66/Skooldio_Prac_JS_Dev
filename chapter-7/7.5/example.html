@@ -41,7 +41,7 @@
       document.getElementById('addButton').onclick = () => {
         // Start a new transaction
         const db = open.result
-        const tx = db.transaction('users', 'readwrite')
+        const tx = db.transaction('users', 'readwrite') // it will manage with key = user and cation is readwrite 
         const store = tx.objectStore('users')
 
         store.add({

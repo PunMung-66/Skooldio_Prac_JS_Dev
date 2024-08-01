@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Favorite Color</h1>
+    <form>
+      <input type="radio" name="color" value="Red" /> Red<br />
+      <input type="radio" name="color" value="Blue" /> Blue<br />
+      <input type="radio" name="color" value="Green" /> Green<br />
+      <button type="button" onclick="showSelectedColor()">Submit</button>
+    </form>
+    
+    <h2>Selected Color:</h2>
+    <div id="result"></div>
+    
+    <script>
+     function showSelectedColor() {
+      let result = document.querySelector('#result');
+      let color = document.querySelectorAll('input');
+      let i = 0;
+      for (;i < color.length; i++){
+        if (color[i].checked){
+          result.innerText = color[i].value;
+          break;
+        }
+      }
+      if (i == color.length){
+        result.innerText = '';
+      }
+     }
+    </script>
+  </body>
+</html>

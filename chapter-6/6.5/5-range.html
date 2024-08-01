@@ -9,7 +9,7 @@
   <script>
     let fooStr = 'foo bar foo foo foo foo'
     let regexRange = /[a-z]/ // เจอตัวอักษร a-z ตัวใดตัวหนึ่ง
-    let regexNotRange = /[^a-z]/ // ไม่เจอตัวอักษร a-z ในตัวอักษรนี้
+    let regexNotRange = /[^a-z]/ // เจอตัวอักษรที่ไม่ใช่ a-z ในตัวอักษรนี้
     let regexQuantified = /(foo){2,3}/ // เจอ foo ตั้งแต่ 2 ครั้งขึ้นไปแต่ไม่เกิน 3 ครั้ง
 
     console.log(regexRange.test(fooStr)) // true

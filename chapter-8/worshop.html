@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;1,800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section class="container">
+      <div id="start-game">
+        <button id="start-button">Start</button>
+      </div>
+
+      <div id="play-game" class="hidden">
+        <div>
+          Counter
+          <span id="counter">10</span> / 10
+        </div>
+        <div id="question" class="question">_____</div>
+        <div id="answer-button" class="answer"></div>
+
+        <button id="restartgame-button">Restart new game</button>
+      </div>
+
+      <div id="end-game" class="hidden">
+        <div id="end-message"></div>
+        <button id="restart-button">Restart</button>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      let start_p = document.querySelector("#start-game");
+      let play_p = document.querySelector("#play-game");
+      let end_p = document.querySelector("#end-game");
+      let counter = document.querySelector("#counter");
+
+      //console.log(play_p);
+
+      let start_b = document.querySelector("#start-button");
+      let answer_g = document.querySelector("#answer-button");
+      let restart_b_win = document.querySelector("#restartgame-button");
+      let restart_b_lose = document.querySelector("#restart-button");
+      let end_message = document.querySelector("#end-message");
+      let questionDisplay = document.querySelector("#question");
+
+      let count = 10;
+      let poke_answer = '';
+      let state = '';
+      let array_question = [];
+      let answer_list = [];
+
+      // game system 
+
+      const endgameplay = (message) =>{
+        end_message.innerText = message;
+        play_p.classList.remove("play-center");
+        play_p.classList.add("hidden");
+        end_p.classList.remove("hidden");
+
+        state = '';
+        answer_g.innerHTML = '';
+        answer_list = [];
+        localStorage.clear();
+      }
+
+      const gen_choice = async () => {
+        try {
+          console.log(answer_list)
+          let A = 65;
+          for (let i = 0; i < 26; i++) {
+            let button = document.createElement("button");
+            button.innerText = String.fromCharCode(65 + i);
+            if (answer_list.includes(button.innerText.toLowerCase())){
+              button.disabled = true;
+            }
+
+            // we can add the duty of button with the command that we create
+            button.addEventListener("click", (event) => {
+              
+              let push_letter = button.innerText.toLowerCase();
+              console.log('currentLetter', push_letter );
+              
+              let currentQuestion = questionDisplay.innerText;
+              array_question = currentQuestion.split('');
+              console.log(array_question)
+              for (let i = 0; i < poke_answer.length; i++){
+                if (poke_answer[i] === push_letter) {
+                  console.log('found it at ' + i);
+                  array_question[i] = poke_answer[i];
+                }
+              }
+              let currentAnswerQuestion = array_question.join('');
+              questionDisplay.innerText = currentAnswerQuestion;
+              button.disabled = true;
+              count--;
+              counter.innerText = count;
+              answer_list.push(push_letter);
+
+              localStorage.setItem('Question', currentAnswerQuestion)
+              localStorage.setItem('Count', count)
+              localStorage.setItem('Answerlist', JSON.stringify(answer_list))
+
+
+              if (currentAnswerQuestion === poke_answer){
+                endgameplay(`Successful! Answer is ${poke_answer}`);
+              }
+              if (count === 0){
+                endgameplay('Game Over');
+              }
+            });
+            answer_g.appendChild(button);
+          }
+        } catch (e) {
+          console.error("error", e.message);
+        }
+      };
+
+      const startgameplay = async () =>{
+        try{
+          if (state === 'playing'){
+            poke_answer = localStorage.getItem('Answer');
+            let blind_ans = localStorage.getItem('Question');
+            questionDisplay.innerText = blind_ans; 
+            count = localStorage.getItem('Count');
+            counter.innerText = count;
+            answer_list_text = localStorage.getItem('Answerlist');
+            if (answer_list_text){
+              answer_list = JSON.parse(answer_list_text)
+            } 
+            counter.innerText = count;
+            gen_choice();
+            return false;
+          }
+          let url = "https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0";
+          let pokedata = await axios.get(url);
+          console.log(pokedata.data);
+          state = 'playing';
+
+          // get answer
+          poke_answer = await pokedata.data.results[
+            Math.round(Math.random() * pokedata.data.results.length)
+          ].name;
+          console.log(poke_answer);
+
+          // check "-" in answer
+          let check_minus = poke_answer.replace(/-/g,'');
+          console.log(check_minus);
+
+          poke_answer = check_minus;
+          // blind aswer . is mean met the any alphabet and g is in every alphabet and sensitive (lowercase != Uppercase)
+          let blind_ans = check_minus.replace(/./g, '_')
+          // set answer
+          questionDisplay.innerText = blind_ans; 
+
+          //save Item
+          localStorage.setItem('Answer', poke_answer);
+          localStorage.setItem('State', state);
+          localStorage.setItem('Question', blind_ans)
+
+
+          // function for play game
+          count = 10;
+          answer_g.innerHTML = '';
+          counter.innerText = count;
+          localStorage.setItem('Count', count)
+
+          gen_choice();
+        }catch (e) {
+          console.error("error", e.message);
+        }
+      }
+
+      // state of the game sence
+      start_b.addEventListener("click", () => {
+        play_p.classList.remove("hidden");
+        play_p.classList.add("play-center");
+        start_p.classList.add("hidden");
+
+        startgameplay();
+      });
+
+      let restart_state = () => {
+        play_p.classList.remove("play-center");
+        play_p.classList.add("hidden");
+        end_p.classList.add("hidden");
+        start_p.classList.remove("hidden"); 
+
+        play_p.classList.remove("hidden");
+        play_p.classList.add("play-center");
+        start_p.classList.add("hidden");
+
+        localStorage.clear();
+        state = '';
+        answer_g.innerHTML = '';
+        answer_list = [];
+        count = 10;
+        startgameplay();
+      };
+
+      restart_b_win.addEventListener("click", restart_state);
+      restart_b_lose.addEventListener("click", restart_state);
+
+
+      window.onload = () => {
+        state = localStorage.getItem('State');
+        if (state === 'playing'){
+          start_b.click();
+        }
+      };
+    </script>
+  </body>
+</html>

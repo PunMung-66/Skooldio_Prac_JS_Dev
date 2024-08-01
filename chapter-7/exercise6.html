@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Web Storage Exercise</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+      input,
+      textarea {
+        display: block;
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Web Storage Exercise</h1>
+    <form id="myForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" />
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" />
+
+      <label for="message">Message:</label>
+      <textarea id="message" name="message"></textarea>
+    </form>
+
+    <script>
+      let name = document.querySelector('#name');
+      let email = document.querySelector('#email');
+      let message = document.querySelector('#message');
+
+      const setCookie = (name, value, time) => {
+        const date = new Date();
+        date.setTime(date.getTime() + (time * 1000));
+        document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+      }
+
+      const getCookie = (name) =>{
+        const str_name = `${name}=`;
+        const ca = document.cookie.split(';');
+        console.log(ca);
+        for (let i = 0; i < ca.length; i++){
+          let c = ca[i].trim();
+          if (c.search(str_name) === 0){
+            return c.substring(str_name.length, c.length);
+          }
+        }
+        return null; // if not have this line it will appear on box as undefined
+      }
+
+      let time_sec = 5;
+
+      name.onchange = (event) =>{
+        console.log( 'name :'+ event.target.value);
+        setCookie('name',event.target.value, time_sec);
+      }
+
+      email.onchange = (event) =>{
+        console.log( 'email :'+ event.target.value);
+        setCookie('email',event.target.value, time_sec);
+      }
+
+      message.onchange = (event) =>{
+        console.log( 'message :'+ event.target.value);
+        setCookie('message',event.target.value, time_sec);
+      }
+
+      window.onload = () =>{
+        const cookie_name = getCookie('name');
+        const cookie_email = getCookie('email');
+        const cookie_message = getCookie('message');
+
+        name.value = cookie_name;
+        email.value = cookie_email;
+        message.value = cookie_message;
+      }
+
+
+
+    </script>
+  </body>
+</html>
+
+
+<!--
+<script>
+  // 1. ทำการเลือกไปยังทุก input ที่ต้องการเก็บข้อมูล และทำการเพิ่ม Event ขณะที่กำลัง input เข้าไป
+  const nameInput = document.getElementById('name')
+  const emailInput = document.getElementById('email')
+  const messageInput = document.getElementById('message')
+
+  // 3. ทุกครั้งที่เปิด site ใหม่ขึ้นมา ให้ดัก Event จังหวะที่เปิดเว็บครั้งแรก และทำการนำค่าจาก localstorage ไปใส่ input แต่ละตัวตามที่ save เอาไว้ใน localstorage
+  window.addEventListener('load', () => {
+    nameInput.value = localStorage.getItem('name') || ''
+    emailInput.value = localStorage.getItem('email') || ''
+    messageInput.value = localStorage.getItem('message') || ''
+  })
+
+  // 2. ใน function ที่ผูกกับ event input ให้ทำการ save ข้อมูลเข้า localstorage
+  nameInput.addEventListener('input', () => {
+    localStorage.setItem('name', nameInput.value)
+  })
+
+  emailInput.addEventListener('input', () => {
+    localStorage.setItem('email', emailInput.value)
+  })
+
+  messageInput.addEventListener('input', () => {
+    localStorage.setItem('message', messageInput.value)
+  })
+</script> -->

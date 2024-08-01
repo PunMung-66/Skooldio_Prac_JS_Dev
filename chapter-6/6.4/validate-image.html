@@ -55,6 +55,8 @@
 
       // Validate ทุกอย่างถูกต้อง = แสดงผลภาพออกมาได้
       imagePreview.src = img.src
+      console.log("image load success")
+
     }
 
     // handle error ขณะ upload image
@@ -63,11 +65,13 @@
       input.value = ''
     }
 
-    // เพิ่มตัวอ่านไฟล์เข้ามา
+    // เพิ่มตัวอ่านไฟล์เข้ามา In JavaScript, the order in which you define functions or event handlers does not affect their functionality 
+    // but the logical is reader.onload -> reader.readAsDataURL(file) -> img.onload 
     const reader = new FileReader()
     reader.onload = (e) => {
       // นำภาพที่อ่านได้ส่งไปยัง Object image
       img.src = e.target.result
+      console.log("read success")
     }
     reader.readAsDataURL(file)
   }
